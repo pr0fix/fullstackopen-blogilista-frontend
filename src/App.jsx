@@ -16,6 +16,8 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const blogFormRef = useRef();
+
   const showNotification = (text, status, timeout) => {
     setMessage({ text, status, timeout });
   };
@@ -72,8 +74,6 @@ const App = () => {
     blogService.setToken(null);
     showNotification("successfully logged out", "success", 3000);
   };
-
-  const blogFormRef = useRef();
 
   return (
     <>
