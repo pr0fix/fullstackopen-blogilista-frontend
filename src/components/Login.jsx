@@ -9,7 +9,7 @@ export default function Login({
 }) {
   return (
     <>
-      <h2>Login</h2>
+      <h2>Log in to application</h2>
       <form onSubmit={handleLogin}>
         <div>
           username
