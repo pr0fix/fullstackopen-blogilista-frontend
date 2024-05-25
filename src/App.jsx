@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -6,11 +6,11 @@ import Login from "./components/Login";
 import Logout from "./components/Logout";
 import ShowNotification from "./components/ShowNotification";
 import AddBlog from "./components/AddBlog";
+import Togglable from "./components/Togglable";
 import "./index.css";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
   const [message, setMessage] = useState(null);
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
@@ -33,23 +33,16 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
-  const addBlog = async (e) => {
-    e.preventDefault();
-    const blogObject = {
-      title: newBlog.title,
-      author: newBlog.author,
-      url: newBlog.url,
-    };
-
+  const addBlog = async (blogObject) => {
     try {
       const newBlog = await blogService.create(blogObject);
       setBlogs(blogs.concat(newBlog));
-      setNewBlog({ title: "", author: "", url: "" });
       showNotification(
         `a new blog ${blogObject.title} by ${blogObject.author} added`,
         "success",
         3000
       );
+      blogFormRef.current.toggleVisibility();
     } catch (err) {
       showNotification("error in adding a new blog", "error", 3000);
     }
@@ -80,9 +73,12 @@ const App = () => {
     showNotification("successfully logged out", "success", 3000);
   };
 
+  const blogFormRef = useRef();
+
   return (
     <>
       <ShowNotification message={message} setMessage={setMessage} />
+
       {!user && (
         <Login
           handleLogin={handleLogin}
@@ -94,24 +90,19 @@ const App = () => {
       )}
 
       {user && (
-        <>
-          <h2>blogs</h2>
+        <div>
+          <h1>blogs</h1>
           <p>
-            {user.name} logged in
-            {<Logout handleLogout={handleLogout} />}
+            {user.name} logged in{<Logout handleLogout={handleLogout} />}
           </p>
-          <h2>create new</h2>
-          {
-            <AddBlog
-              newBlog={newBlog}
-              setNewBlog={setNewBlog}
-              addBlog={addBlog}
-            />
-          }
+          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+            <AddBlog createBlog={addBlog} />
+          </Togglable>
+
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
-        </>
+        </div>
       )}
     </>
   );

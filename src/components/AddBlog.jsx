@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function AddBlog({ newBlog, setNewBlog, addBlog }) {
-  const handleAddNewBlog = (e) => {
+export default function AddBlog({ createBlog }) {
+  const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
+
+  const addBlog = (e) => {
+    e.preventDefault();
+    createBlog(newBlog);
+    setNewBlog({ title: "", author: "", url: "" });
+  };
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setNewBlog({ ...newBlog, [name]: value });
+    setNewBlog((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   return (
     <>
+      <h2>create new</h2>
       <form id="addBlogForm" onSubmit={addBlog}>
         <div>
           <label htmlFor="title">title:</label>
@@ -15,8 +27,8 @@ export default function AddBlog({ newBlog, setNewBlog, addBlog }) {
             type="text"
             name="title"
             id="title"
-            onChange={handleAddNewBlog}
             value={newBlog.title}
+            onChange={handleChange}
           />
         </div>
         <div>
@@ -25,8 +37,8 @@ export default function AddBlog({ newBlog, setNewBlog, addBlog }) {
             type="text"
             name="author"
             id="author"
-            onChange={handleAddNewBlog}
             value={newBlog.author}
+            onChange={handleChange}
           />
         </div>
         <div>
@@ -35,8 +47,8 @@ export default function AddBlog({ newBlog, setNewBlog, addBlog }) {
             type="text"
             name="url"
             id="url"
-            onChange={handleAddNewBlog}
             value={newBlog.url}
+            onChange={handleChange}
           />
         </div>
         <div>
