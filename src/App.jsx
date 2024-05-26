@@ -93,9 +93,9 @@ const App = () => {
         <div>
           <h1>blogs</h1>
           <p>
-            {user.name} logged in{<Logout handleLogout={handleLogout} />}
+            {user.name} logged in {<Logout handleLogout={handleLogout} />}
           </p>
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
             <AddBlog createBlog={addBlog} />
           </Togglable>
 
