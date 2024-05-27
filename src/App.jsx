@@ -60,9 +60,7 @@ const App = () => {
       };
 
       await blogService.update(blogObject.id, updatedBlog);
-      setBlogs(
-        blogs.map((blog) => (blog.id === blogObject.id ? updatedBlog : blog))
-      );
+      setBlogs(blogs.map((blog) => (blog.id === blogObject.id ? updatedBlog : blog)));
     } catch (err) {
       showNotification("error in updating blog", "error", 3000);
     }
