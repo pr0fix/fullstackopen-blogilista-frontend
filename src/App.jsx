@@ -59,10 +59,29 @@ const App = () => {
         likes: blogToUpdate.likes + 1,
       };
 
-      await blogService.update(blogObject.id, updatedBlog);
-      setBlogs(blogs.map((blog) => (blog.id === blogObject.id ? updatedBlog : blog)));
+      await blogService.updateBlog(blogObject.id, updatedBlog);
+      setBlogs(
+        blogs.map((blog) => (blog.id === blogObject.id ? updatedBlog : blog))
+      );
     } catch (err) {
       showNotification("error in updating blog", "error", 3000);
+    }
+  };
+
+  const deleteBlog = async (blogObject) => {
+    try {
+      if (
+        window.confirm(
+          `Remove blog ${blogObject.title} by ${blogObject.author}`
+        )
+      ) {
+        await blogService.deleteBlog(blogObject.id);
+        setBlogs(blogs.filter((blog) => blog.id !== blogObject.id));
+        showNotification("blog deleted successfully", "success", 3000);
+      } 
+    } catch (err) {
+      showNotification("error in deleting blog", "error", 3000);
+      console.error(err);
     }
   };
 
@@ -115,13 +134,17 @@ const App = () => {
             <AddBlog createBlog={addBlog} />
           </Togglable>
 
-          {blogs.sort((a,b) => b.likes - a.likes).map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              updateBlog={() => updateBlog(blog)}
-            />
-          ))}
+          {blogs
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                updateBlog={() => updateBlog(blog)}
+                deleteBlog={() => deleteBlog(blog)}
+                user={user}
+              />
+            ))}
         </div>
       )}
     </>
