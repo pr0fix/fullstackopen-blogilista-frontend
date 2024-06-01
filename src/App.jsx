@@ -78,7 +78,7 @@ const App = () => {
         await blogService.deleteBlog(blogObject.id);
         setBlogs(blogs.filter((blog) => blog.id !== blogObject.id));
         showNotification("blog deleted successfully", "success", 3000);
-      } 
+      }
     } catch (err) {
       showNotification("error in deleting blog", "error", 3000);
       console.error(err);
