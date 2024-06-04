@@ -6,18 +6,17 @@ import Blog from "./Blog";
 import userEvent from "@testing-library/user-event";
 
 describe("<Blog />", () => {
+  const testUser = {
+    username: "testUser",
+    name: "testUser",
+  };
+
   const blog = {
     title: "very important test blog",
     author: "test author III",
     url: "testurl.com",
     likes: 56,
-    user: {
-      username: "testUser",
-    },
-  };
-
-  const testUser = {
-    username: "testUser",
+    user: testUser,
   };
 
   const updateBlog = vi.fn();
@@ -64,8 +63,10 @@ describe("<Blog />", () => {
     await user.click(button);
 
     const url = screen.getByText(/testurl.com/i);
-    const likes = screen.getByText(/likes/i);
+    const likes = screen.getByText(/likes 56/i);
+    const blogCreator = screen.getByText(/testUser/i);
     expect(url).toBeInTheDocument();
     expect(likes).toBeInTheDocument();
+    expect(blogCreator).toBeInTheDocument();
   });
 });
