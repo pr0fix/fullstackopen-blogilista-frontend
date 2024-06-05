@@ -28,6 +28,7 @@ export default function AddBlog({ createBlog }) {
             type="text"
             name="title"
             id="title"
+            placeholder="write blog title here"
             value={newBlog.title}
             onChange={handleChange}
           />
@@ -38,6 +39,7 @@ export default function AddBlog({ createBlog }) {
             type="text"
             name="author"
             id="author"
+            placeholder="write blog author here"
             value={newBlog.author}
             onChange={handleChange}
           />
@@ -48,6 +50,7 @@ export default function AddBlog({ createBlog }) {
             type="text"
             name="url"
             id="url"
+            placeholder="write blog url here"
             value={newBlog.url}
             onChange={handleChange}
           />

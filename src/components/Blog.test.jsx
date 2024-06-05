@@ -91,7 +91,7 @@ describe("<Blog />", () => {
     const likeButton = screen.getByRole("button", { name: /like/i });
     await user.click(likeButton);
     await user.click(likeButton);
-
-    expect(updateBlog).toHaveBeenCalledTimes(2);
+    expect(updateBlog.mock.calls).toHaveLength(2)
+    // expect(updateBlog).toHaveBeenCalledTimes(2);
   });
 });
