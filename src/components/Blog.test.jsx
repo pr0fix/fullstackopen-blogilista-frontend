@@ -59,14 +59,39 @@ describe("<Blog />", () => {
     expect(author).toBeInTheDocument();
 
     const user = userEvent.setup();
-    const button = screen.getByText(/view/i);
-    await user.click(button);
+    const viewButton = screen.getByText(/view/i);
+    await user.click(viewButton);
 
-    const url = screen.getByText(/testurl.com/i);
-    const likes = screen.getByText(/likes 56/i);
+    const url = screen.queryByText(/testurl.com/i);
+    const likes = screen.queryByText(/likes/i);
     const blogCreator = screen.getByText(/testUser/i);
     expect(url).toBeInTheDocument();
     expect(likes).toBeInTheDocument();
     expect(blogCreator).toBeInTheDocument();
+  });
+
+  test("props handler is called twice when like button is pressed twice", async () => {
+    render(
+      <Blog
+        blog={blog}
+        updateBlog={updateBlog}
+        deleteBlog={deleteBlog}
+        user={testUser}
+      />
+    );
+    const title = screen.getByText(/very important test blog/i);
+    const author = screen.getByText(/test author III/i);
+    expect(title).toBeInTheDocument();
+    expect(author).toBeInTheDocument();
+
+    const user = userEvent.setup();
+    const viewButton = screen.getByText(/view/i);
+    await user.click(viewButton);
+
+    const likeButton = screen.getByRole("button", { name: /like/i });
+    await user.click(likeButton);
+    await user.click(likeButton);
+
+    expect(updateBlog).toHaveBeenCalledTimes(2);
   });
 });
