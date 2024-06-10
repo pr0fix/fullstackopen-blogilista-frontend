@@ -37,7 +37,11 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     try {
-      const newBlog = await blogService.create(blogObject);
+      const createdBlog = await blogService.create(blogObject);
+      const newBlog = {
+        ...createdBlog,
+        user: { username: user.username, name: user.name, id: user.id },
+      };
       setBlogs(blogs.concat(newBlog));
       showNotification(
         `a new blog ${blogObject.title} by ${blogObject.author} added`,
@@ -47,6 +51,41 @@ const App = () => {
       blogFormRef.current.toggleVisibility();
     } catch (err) {
       showNotification("error in adding a new blog", "error", 3000);
+    }
+  };
+
+  const updateBlog = async (blogObject) => {
+    try {
+      const blogToUpdate = blogs.find((blog) => blog.id === blogObject.id);
+
+      const updatedBlog = {
+        ...blogToUpdate,
+        likes: blogToUpdate.likes + 1,
+      };
+
+      await blogService.updateBlog(blogObject.id, updatedBlog);
+      setBlogs(
+        blogs.map((blog) => (blog.id === blogObject.id ? updatedBlog : blog))
+      );
+    } catch (err) {
+      showNotification("error in updating blog", "error", 3000);
+    }
+  };
+
+  const deleteBlog = async (blogObject) => {
+    try {
+      if (
+        window.confirm(
+          `Remove blog ${blogObject.title} by ${blogObject.author}`
+        )
+      ) {
+        await blogService.deleteBlog(blogObject.id);
+        setBlogs(blogs.filter((blog) => blog.id !== blogObject.id));
+        showNotification("blog deleted successfully", "success", 3000);
+      }
+    } catch (err) {
+      showNotification("error in deleting blog", "error", 3000);
+      console.error(err);
     }
   };
 
@@ -93,15 +132,23 @@ const App = () => {
         <div>
           <h1>blogs</h1>
           <p>
-            {user.name} logged in{<Logout handleLogout={handleLogout} />}
+            {user.name} logged in {<Logout handleLogout={handleLogout} />}
           </p>
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
             <AddBlog createBlog={addBlog} />
           </Togglable>
 
-          {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
-          ))}
+          {blogs
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                updateBlog={() => updateBlog(blog)}
+                deleteBlog={() => deleteBlog(blog)}
+                user={user}
+              />
+            ))}
         </div>
       )}
     </>

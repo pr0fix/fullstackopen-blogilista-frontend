@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 export default function AddBlog({ createBlog }) {
   const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
@@ -28,6 +29,7 @@ export default function AddBlog({ createBlog }) {
             name="title"
             id="title"
             data-testid="title"
+            placeholder="write blog title here"
             value={newBlog.title}
             onChange={handleChange}
           />
@@ -39,6 +41,7 @@ export default function AddBlog({ createBlog }) {
             name="author"
             id="author"
             data-testid="author"
+            placeholder="write blog author here"
             value={newBlog.author}
             onChange={handleChange}
           />
@@ -50,6 +53,7 @@ export default function AddBlog({ createBlog }) {
             name="url"
             id="url"
             data-testid="url"
+            placeholder="write blog url here"
             value={newBlog.url}
             onChange={handleChange}
           />
@@ -61,3 +65,7 @@ export default function AddBlog({ createBlog }) {
     </>
   );
 }
+
+AddBlog.propTypes = {
+  createBlog: PropTypes.func.isRequired,
+};
