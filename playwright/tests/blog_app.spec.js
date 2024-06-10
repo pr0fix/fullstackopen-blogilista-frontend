@@ -61,5 +61,28 @@ describe("Blog app", () => {
 
       await expect(page.getByText("likes 1")).toBeVisible();
     });
+
+    test("user can delete a blog they've added", async ({ page }) => {
+      await createBlog(page, "test title", "test author", "http://testurl.com");
+      await expect(page.getByText("test title test author")).toBeVisible();
+
+      page.on("dialog", (dialog) => {
+        expect(dialog.type()).toContain("confirm");
+        expect(dialog.message()).toContain(
+          "Remove blog test title by test author"
+        );
+        dialog.accept();
+      });
+
+      await page.getByRole("button", { name: "view" }).click();
+      await page.getByRole("button", { name: "delete" }).click();
+
+      const successDiv = await page.locator(".success");
+      await expect(successDiv).toContainText("blog deleted successfully");
+      await expect(successDiv).toHaveCSS("border-style", "solid");
+      await expect(successDiv).toHaveCSS("color", "rgb(0, 128, 0)");
+
+      await expect(page.getByText("test title test author")).not.toBeVisible();
+    });
   });
 });
