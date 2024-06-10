@@ -17,6 +17,7 @@ export default function Login({
             type="text"
             value={username}
             name="Username"
+            data-testid="username"
             onChange={({ target }) => setUsername(target.value)}
           ></input>
         </div>
@@ -26,6 +27,7 @@ export default function Login({
             type="password"
             value={password}
             name="Password"
+            data-testid="password"
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>

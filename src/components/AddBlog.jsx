@@ -27,6 +27,7 @@ export default function AddBlog({ createBlog }) {
             type="text"
             name="title"
             id="title"
+            data-testid="title"
             value={newBlog.title}
             onChange={handleChange}
           />
@@ -37,6 +38,7 @@ export default function AddBlog({ createBlog }) {
             type="text"
             name="author"
             id="author"
+            data-testid="author"
             value={newBlog.author}
             onChange={handleChange}
           />
@@ -47,6 +49,7 @@ export default function AddBlog({ createBlog }) {
             type="text"
             name="url"
             id="url"
+            data-testid="url"
             value={newBlog.url}
             onChange={handleChange}
           />
