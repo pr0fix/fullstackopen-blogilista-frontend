@@ -84,5 +84,29 @@ describe("Blog app", () => {
 
       await expect(page.getByText("test title test author")).not.toBeVisible();
     });
+
+    test("delete button is shown only to user who created the blog", async ({
+      page,
+      request,
+    }) => {
+      await createBlog(page, "test title", "test author", "http://testurl.com");
+      await expect(page.getByText("test title test author")).toBeVisible();
+      await page.getByRole("button", { name: "view" }).click();
+      await expect(page.getByRole("button", { name: "delete" })).toBeVisible();
+      await page.getByRole("button", { name: "logout" }).click();
+
+      await request.post("http://localhost:3003/api/users", {
+        data: {
+          name: "Test User",
+          username: "testuser",
+          password: "testuser",
+        },
+      });
+      await loginWith(page, "testuser", "testuser");
+      await page.getByRole("button", { name: "view" }).click();
+      await expect(
+        page.getByRole("button", { name: "delete" })
+      ).not.toBeVisible();
+    });
   });
 });
