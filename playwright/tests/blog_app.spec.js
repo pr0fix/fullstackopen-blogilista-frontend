@@ -108,5 +108,29 @@ describe("Blog app", () => {
         page.getByRole("button", { name: "delete" })
       ).not.toBeVisible();
     });
+
+    test("blogs are sorted based on blogs with most liked on top", async ({
+      page,
+    }) => {
+      await createBlog(page, "testBlog1", "testAuthor1", "firstTestUrl.com");
+      await createBlog(page, "testBlog2", "testAuthor2", "secondTestUrl.com");
+      await createBlog(page, "testBlog3", "testAuthor3", "thirdTestUrl.com");
+
+      await page.getByRole("button", { name: "view" }).first().click();
+      await page.getByRole("button", { name: "view" }).nth(0).click();
+      await page.getByRole("button", { name: "view" }).last().click();
+
+      await page.getByRole("button", { name: "like" }).first().click();
+      await page.getByRole("button", { name: "like" }).first().click();
+      await page.getByRole("button", { name: "like" }).nth(1).click();
+      await page.getByRole("button", { name: "like" }).nth(1).click();
+      await page.getByRole("button", { name: "like" }).nth(1).click();
+      await page.getByRole("button", { name: "like" }).last().click();
+
+      const blogs = page.locator(".blog")
+      await expect(blogs.nth(0)).toContainText("testBlog2")
+      await expect(blogs.nth(1)).toContainText("testBlog1");
+      await expect(blogs.nth(2)).toContainText("testBlog3");
+    });
   });
 });
